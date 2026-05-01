@@ -8,8 +8,15 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 
 @auth_bp.route('/register', methods=['POST'])
+@jwt_required()
 def register():
-    """Registrar un nuevo usuario"""
+    """Registrar un nuevo usuario (solo admin)"""
+    # Solo el admin puede crear usuarios
+    current_user_id = get_jwt_identity()
+    current_user = User.query.get(int(current_user_id))
+    if current_user.rol_id != 1:
+        return jsonify({'error': 'Solo el administrador puede crear usuarios'}), 403
+
     data = request.get_json()
 
     # Validar campos obligatorios
@@ -23,7 +30,7 @@ def register():
         return jsonify({'error': 'El email ya está registrado'}), 409
 
     # Validar que el rol existe
-    rol_id = data.get('rol_id', 2)  # Por defecto rol 2 (cliente)
+    rol_id = data.get('rol_id', 2)  # Por defecto rol 2 (veterinario)
     role = Role.query.get(rol_id)
     if not role:
         return jsonify({'error': 'El rol especificado no existe'}), 400

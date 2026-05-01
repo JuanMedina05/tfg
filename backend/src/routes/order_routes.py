@@ -56,9 +56,7 @@ def create_order():
             {"producto_id": 3, "cantidad": 1}
         ]
     }
-    El precio se calcula automáticamente según el rol del usuario:
-    - Veterinario (rol_id=3): precio_profesional
-    - Otros: precio_publico
+    El precio aplicado es siempre precio_profesional (todos los usuarios son veterinarios).
     """
     current_user_id = get_jwt_identity()
     current_user = User.query.get(int(current_user_id))
@@ -95,12 +93,8 @@ def create_order():
                          f'Disponible: {producto.stock}, Solicitado: {cantidad}'
             }), 400
 
-        # Determinar precio según rol del usuario
-        # Rol 3 = veterinario → precio profesional
-        if current_user.rol_id == 3:
-            precio = float(producto.precio_profesional)
-        else:
-            precio = float(producto.precio_publico)
+        # Todos los usuarios son veterinarios → siempre precio profesional
+        precio = float(producto.precio_profesional)
 
         order_item = OrderItem(
             pedido_id=new_order.id,

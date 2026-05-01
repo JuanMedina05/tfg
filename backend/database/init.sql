@@ -18,11 +18,9 @@ CREATE TABLE categorias (
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    apellidos VARCHAR(100),
     email VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    direccion TEXT,
-    num_colegiado VARCHAR(50), -- Solo para veterinarios
+    num_colegiado VARCHAR(50),
     rol_id INT,
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 );
@@ -59,4 +57,17 @@ CREATE TABLE detalle_pedido (
     precio_unitario_aplicado DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
     FOREIGN KEY (producto_id) REFERENCES productos(id)
+);
+
+-- Insertar roles iniciales
+INSERT INTO roles (id, nombre) VALUES (1, 'admin');
+INSERT INTO roles (id, nombre) VALUES (2, 'veterinario');
+
+-- Insertar usuario admin por defecto
+-- Contraseña: admin123 (hasheada con bcrypt)
+INSERT INTO usuarios (nombre, email, password, rol_id) VALUES (
+    'Administrador',
+    'admin@veterinaria.com',
+    '$2b$12$vw17CRW62qEJlBjHULnT9OsN.g0lgfzYsbmlApp5PiugueRPjNbUW',
+    1
 );

@@ -7,6 +7,7 @@ products_bp = Blueprint('products', __name__, url_prefix='/api/products')
 
 
 @products_bp.route('', methods=['GET'])
+@jwt_required()
 def get_products():
     """
     Listar productos con paginación y filtro por categoría.
@@ -39,6 +40,7 @@ def get_products():
 
 
 @products_bp.route('/<int:id>', methods=['GET'])
+@jwt_required()
 def get_product(id):
     """Obtener un producto por ID"""
     product = Product.query.get(id)

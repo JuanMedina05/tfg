@@ -7,6 +7,7 @@ categories_bp = Blueprint('categories', __name__, url_prefix='/api/categories')
 
 
 @categories_bp.route('', methods=['GET'])
+@jwt_required()
 def get_categories():
     """Listar todas las categorías"""
     categories = Category.query.all()
@@ -14,6 +15,7 @@ def get_categories():
 
 
 @categories_bp.route('/<int:id>', methods=['GET'])
+@jwt_required()
 def get_category(id):
     """Obtener una categoría por ID"""
     category = Category.query.get(id)
