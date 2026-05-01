@@ -1,0 +1,18 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: vete_db_container
+    restart: always
+    environment:
+      MYSQL_DATABASE: veterinaria_db
+      MYSQL_ROOT_PASSWORD: root_password_segura
+      MYSQL_USER: vete_user
+      MYSQL_PASSWORD: vete_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
