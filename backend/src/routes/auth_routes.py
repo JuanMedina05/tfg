@@ -80,19 +80,31 @@ def login():
         return jsonify({'error': 'Credenciales inválidas'}), 401
 
     # Crear token JWT con identidad del usuario
-    access_token = create_access_token(
-        identity=str(user.id),
-        additional_claims={
-            'num_colegiado': user.num_colegiado,
-            'rol_id': user.rol_id
-        }
-    )
+    try:
+        access_token = create_access_token(
+            identity=str(user.id),
+            additional_claims={
+                'num_colegiado': user.num_colegiado,
+                'rol_id': user.rol_id
+            }
+        )
 
-    return jsonify({
-        'message': 'Login exitoso',
-        'access_token': access_token,
-        'user': user_schema.dump(user)
-    }), 200
+        user_data = {
+            'id': user.id,
+            'nombre': user.nombre,
+            'apodo': user.apodo or '',
+            'telefono': user.telefono or '',
+            'num_colegiado': user.num_colegiado,
+            'rol_id': user.rol_id,
+        }
+
+        return jsonify({
+            'message': 'Login exitoso',
+            'access_token': access_token,
+            'user': user_data
+        }), 200
+    except Exception as e:
+        return jsonify({'error': f'Error interno al generar el token: {str(e)}'}), 500
 
 
 @auth_bp.route('/me', methods=['GET'])
