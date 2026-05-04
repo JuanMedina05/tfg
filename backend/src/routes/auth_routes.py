@@ -20,14 +20,14 @@ def register():
     data = request.get_json()
 
     # Validar campos obligatorios
-    required_fields = ['nombre', 'email', 'password']
+    required_fields = ['nombre', 'num_colegiado', 'password']
     for field in required_fields:
         if field not in data or not data[field]:
             return jsonify({'error': f'El campo "{field}" es obligatorio'}), 400
 
-    # Comprobar si el email ya existe
-    if User.query.filter_by(email=data['email']).first():
-        return jsonify({'error': 'El email ya está registrado'}), 409
+    # Comprobar si el num_colegiado ya existe
+    if User.query.filter_by(num_colegiado=data['num_colegiado']).first():
+        return jsonify({'error': 'El número de colegiado ya está registrado'}), 409
 
     # Validar que el rol existe
     rol_id = data.get('rol_id', 2)  # Por defecto rol 2 (veterinario)
@@ -44,11 +44,10 @@ def register():
     # Crear usuario
     new_user = User(
         nombre=data['nombre'],
-        apellidos=data.get('apellidos', ''),
-        email=data['email'],
+        apodo=data.get('apodo', ''),
+        telefono=data.get('telefono', ''),
+        num_colegiado=data['num_colegiado'],
         password=hashed_password,
-        direccion=data.get('direccion', ''),
-        num_colegiado=data.get('num_colegiado'),
         rol_id=rol_id
     )
 
@@ -63,13 +62,13 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    """Iniciar sesión y obtener token JWT"""
+    """Iniciar sesión con número de colegiado y contraseña"""
     data = request.get_json()
 
-    if not data or not data.get('email') or not data.get('password'):
-        return jsonify({'error': 'Email y contraseña son obligatorios'}), 400
+    if not data or not data.get('num_colegiado') or not data.get('password'):
+        return jsonify({'error': 'Número de colegiado y contraseña son obligatorios'}), 400
 
-    user = User.query.filter_by(email=data['email']).first()
+    user = User.query.filter_by(num_colegiado=data['num_colegiado']).first()
     if not user:
         return jsonify({'error': 'Credenciales inválidas'}), 401
 
@@ -84,7 +83,7 @@ def login():
     access_token = create_access_token(
         identity=str(user.id),
         additional_claims={
-            'email': user.email,
+            'num_colegiado': user.num_colegiado,
             'rol_id': user.rol_id
         }
     )

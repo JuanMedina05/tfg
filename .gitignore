@@ -1,0 +1,27 @@
+# Entornos virtuales
+venv/
+env/
+.env/
+
+# Archivos de entorno (SECRETOS - NO SUBIR NUNCA A GITHUB)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Dependencias
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Builds
+frontend/dist/
+backend/uploads/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -10,14 +10,13 @@ class RoleSchema(ma.Schema):
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'nombre', 'apellidos', 'email', 'direccion',
-                  'num_colegiado', 'rol_id')
+        fields = ('id', 'nombre', 'apodo', 'telefono', 'num_colegiado', 'rol_id')
 
 
 class UserPublicSchema(ma.Schema):
     """Esquema público sin datos sensibles"""
     class Meta:
-        fields = ('id', 'nombre', 'apellidos', 'email')
+        fields = ('id', 'nombre', 'apodo')
 
 
 class CategorySchema(ma.Schema):
@@ -27,8 +26,8 @@ class CategorySchema(ma.Schema):
 
 class ProductSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'nombre', 'descripcion', 'precio_publico',
-                  'precio_profesional', 'stock', 'categoria_id', 'imagen_url')
+        fields = ('id', 'nombre', 'descripcion', 'precio_profesional',
+                  'stock', 'categoria_id', 'imagen_url', 'oculto')
 
 
 class OrderItemSchema(ma.Schema):

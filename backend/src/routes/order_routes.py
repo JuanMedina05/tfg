@@ -138,7 +138,7 @@ def update_order_status(id):
     data = request.get_json()
     new_status = data.get('estado')
 
-    valid_statuses = ['pendiente', 'pagado', 'enviado', 'cancelado']
+    valid_statuses = ['pendiente', 'en proceso', 'finalizado', 'cancelado']
     if new_status not in valid_statuses:
         return jsonify({
             'error': f'Estado inválido. Estados válidos: {", ".join(valid_statuses)}'

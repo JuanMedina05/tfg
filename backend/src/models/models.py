@@ -19,16 +19,15 @@ class User(db.Model):
     __tablename__ = 'usuarios'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
-    apellidos = db.Column(db.String(100), nullable=True)
-    email = db.Column(db.String(150), unique=True, nullable=False)
+    apodo = db.Column(db.String(100), nullable=True)
+    telefono = db.Column(db.String(20), nullable=True)
     password = db.Column(db.String(255), nullable=False)
-    direccion = db.Column(db.Text, nullable=True)
-    num_colegiado = db.Column(db.String(50), nullable=True)
+    num_colegiado = db.Column(db.String(50), unique=True, nullable=False)
     rol_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
     pedidos = db.relationship('Order', backref='cliente', lazy=True)
 
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f'<User {self.num_colegiado}>'
 
 
 class Category(db.Model):
@@ -46,11 +45,11 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(150), nullable=False)
     descripcion = db.Column(db.Text, nullable=True)
-    precio_publico = db.Column(db.Numeric(10, 2), nullable=False)
     precio_profesional = db.Column(db.Numeric(10, 2), nullable=False)
     stock = db.Column(db.Integer, default=0)
     categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'))
     imagen_url = db.Column(db.String(255), nullable=True)
+    oculto = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f'<Product {self.nombre}>'

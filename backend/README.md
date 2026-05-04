@@ -25,7 +25,7 @@ docker-compose up -d
 
 Esto levanta un contenedor de MySQL con la base de datos `veterinaria_db` ya creada, las tablas listas, los roles iniciales y un usuario admin por defecto (usa el archivo `database/init.sql`).
 
-**Usuario admin por defecto:** `admin@veterinaria.com` / `admin123`
+**Usuario admin por defecto:** `ADMIN001` / `admin123`
 
 ### 2. Instalar dependencias de Python
 
@@ -87,7 +87,7 @@ La base de datos tiene las siguientes tablas:
 - **roles** — los roles de usuario (admin y veterinario)
 - **usuarios** — los usuarios registrados
 - **categorias** — categorías de productos
-- **productos** — los productos de la tienda (con precio público y profesional)
+- **productos** — los productos de la tienda
 - **pedidos** — los pedidos que hacen los usuarios
 - **detalle_pedido** — los productos de cada pedido con la cantidad y precio aplicado
 
@@ -119,7 +119,8 @@ POST /api/auth/register
 Authorization: Bearer <token_del_admin>
 {
     "nombre": "Juan",
-    "email": "juan@example.com",
+    "apodo": "Juani",
+    "telefono": "600123456",
     "password": "mipassword123",
     "num_colegiado": "VET-1234"
 }
@@ -130,7 +131,7 @@ Authorization: Bearer <token_del_admin>
 ```json
 POST /api/auth/login
 {
-    "email": "juan@example.com",
+    "num_colegiado": "VET-1234",
     "password": "mipassword123"
 }
 ```
@@ -190,8 +191,9 @@ El `GET /api/products` acepta estos query params para filtrar:
 - `per_page` — productos por página (por defecto 20)
 - `categoria_id` — filtrar por categoría
 - `search` — buscar por nombre
+- `sort` — ordenar (nombre_asc, nombre_desc, precio_asc, precio_desc)
 
-Ejemplo: `GET /api/products?search=collar&categoria_id=2&page=1`
+Ejemplo: `GET /api/products?search=collar&categoria_id=2&sort=precio_asc`
 
 ### Pedidos (`/api/orders`)
 
@@ -228,7 +230,6 @@ El precio se aplica automáticamente usando `precio_profesional` ya que todos lo
 
 ## Notas
 
-- El `precio_publico` está en la base de datos por si en un futuro se quiere abrir la tienda al público, pero de momento no se usa
 - Al cancelar un pedido se devuelve el stock de los productos
 - No se puede borrar una categoría que tenga productos asociados
 - Al levantar la base de datos por primera vez, se crean los roles (admin y veterinario) y un usuario admin automáticamente
